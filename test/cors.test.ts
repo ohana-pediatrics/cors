@@ -14,7 +14,7 @@ describe('cors.test.js', function() {
     });
 
     it('should not set `Access-Control-Allow-Origin` when request Origin header missing', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .expect({ foo: 'bar' })
         .expect(200, function(err, res) {
@@ -25,7 +25,7 @@ describe('cors.test.js', function() {
     });
 
     it('should set `Access-Control-Allow-Origin` to request origin header', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Allow-Origin', 'http://koajs.com')
@@ -34,7 +34,7 @@ describe('cors.test.js', function() {
     });
 
     it('should 204 on Preflight Request', function(done) {
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -44,14 +44,14 @@ describe('cors.test.js', function() {
     });
 
     it('should not Preflight Request if request missing Access-Control-Request-Method', function(done) {
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .expect(200, done);
     });
 
     it('should always set `Vary` to Origin', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Vary', 'Origin')
@@ -70,7 +70,7 @@ describe('cors.test.js', function() {
     });
 
     it('should always set `Access-Control-Allow-Origin` to *', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Allow-Origin', '*')
@@ -94,7 +94,7 @@ describe('cors.test.js', function() {
     });
 
     it('should disable cors', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/forbin')
         .set('Origin', 'http://koajs.com')
         .expect({ foo: 'bar' })
@@ -106,7 +106,7 @@ describe('cors.test.js', function() {
     });
 
     it('should set access-control-allow-origin to *', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect({ foo: 'bar' })
@@ -130,7 +130,7 @@ describe('cors.test.js', function() {
     });
 
     it('should disable cors', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/forbin')
         .set('Origin', 'http://koajs.com')
         .expect({ foo: 'bar' })
@@ -142,7 +142,7 @@ describe('cors.test.js', function() {
     });
 
     it('should set access-control-allow-origin to *', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect({ foo: 'bar' })
@@ -161,7 +161,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Expose-Headers', 'content-length')
@@ -178,7 +178,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Expose-Headers', 'content-length,x-header')
@@ -197,7 +197,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -214,7 +214,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -231,7 +231,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect({ foo: 'bar' })
@@ -253,7 +253,7 @@ describe('cors.test.js', function() {
     });
 
     it('should enable Access-Control-Allow-Credentials on Simple request', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Allow-Credentials', 'true')
@@ -262,7 +262,7 @@ describe('cors.test.js', function() {
     });
 
     it('should enable Access-Control-Allow-Credentials on Preflight request', function(done) {
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'DELETE')
@@ -281,7 +281,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -298,7 +298,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -313,7 +313,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -333,7 +333,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -350,7 +350,7 @@ describe('cors.test.js', function() {
         ctx.body = { foo: 'bar' };
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -367,7 +367,7 @@ describe('cors.test.js', function() {
         throw new Error('Whoops!');
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Allow-Origin', 'http://koajs.com')
@@ -384,7 +384,7 @@ describe('cors.test.js', function() {
         throw new Error('Whoops!');
       });
 
-      request(app.listen())
+      request(app.callback())
         .options('/')
         .set('Origin', 'http://koajs.com')
         .set('Access-Control-Request-Method', 'PUT')
@@ -401,7 +401,7 @@ describe('cors.test.js', function() {
         throw new Error('Whoops!');
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Access-Control-Allow-Origin', 'http://koajs.com')
@@ -425,7 +425,7 @@ describe('cors.test.js', function() {
         throw new Error('Whoops!');
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect(/Error/)
@@ -454,7 +454,7 @@ describe('cors.test.js', function() {
     });
 
     it('should append `Vary` header to Origin', function(done) {
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Vary', 'Accept-Encoding, Origin')
@@ -475,7 +475,7 @@ describe('cors.test.js', function() {
         throw error;
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Vary', 'Accept-Encoding, Origin')
@@ -494,7 +494,7 @@ describe('cors.test.js', function() {
         throw error;
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Vary', '*')
@@ -513,7 +513,7 @@ describe('cors.test.js', function() {
         throw error;
       });
 
-      request(app.listen())
+      request(app.callback())
         .get('/')
         .set('Origin', 'http://koajs.com')
         .expect('Vary', 'Origin, Accept-Encoding')

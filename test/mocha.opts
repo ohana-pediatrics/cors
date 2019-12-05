@@ -1,6 +1,5 @@
 -r ts-node/register
 --check-leaks 
---exit
 -R spec 
 -t 5000 
 test/*.test.ts
