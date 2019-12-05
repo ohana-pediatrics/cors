@@ -33,11 +33,11 @@
     "git-cz": "^3.3.0",
     "istanbul": "*",
     "koa": "^2.11.0",
-    "mocha": "3",
+    "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "prettier": "^1.19.1",
     "standard-version": "^7.0.1",
-    "supertest": "^3.1.0",
+    "supertest": "^4.0.2",
     "ts-node": "^8.5.4",
     "tslint": "^5.20.1",
     "typescript": "^3.7.3"
