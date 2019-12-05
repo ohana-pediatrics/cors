@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('assert');
-const Koa = require('koa');
-const request = require('supertest');
-const cors = require('../');
+import assert from 'assert';
+import Koa from 'koa';
+import request from 'supertest';
+import {cors} from '../src';
 
 describe('cors.test.js', function() {
   describe('default options', function() {
@@ -19,7 +19,7 @@ describe('cors.test.js', function() {
         .expect({ foo: 'bar' })
         .expect(200, function(err, res) {
           assert(!err);
-          assert(!res.headers['access-control-allow-origin']);
+          assert(!res.get('access-control-allow-origin'));
           done();
         });
     });
@@ -82,7 +82,7 @@ describe('cors.test.js', function() {
   describe('options.origin=function', function() {
     const app = new Koa();
     app.use(cors({
-      origin(ctx) {
+      origin: (ctx) => {
         if (ctx.url === '/forbin') {
           return false;
         }
@@ -100,7 +100,7 @@ describe('cors.test.js', function() {
         .expect({ foo: 'bar' })
         .expect(200, function(err, res) {
           assert(!err);
-          assert(!res.headers['access-control-allow-origin']);
+          assert(!res.get('access-control-allow-origin'));
           done();
         });
     });
@@ -118,7 +118,7 @@ describe('cors.test.js', function() {
   describe('options.origin=async function', function() {
     const app = new Koa();
     app.use(cors({
-      async origin(ctx) {
+      origin: async (ctx) => {
         if (ctx.url === '/forbin') {
           return false;
         }
@@ -136,7 +136,7 @@ describe('cors.test.js', function() {
         .expect({ foo: 'bar' })
         .expect(200, function(err, res) {
           assert(!err);
-          assert(!res.headers['access-control-allow-origin']);
+          assert(!res.get('access-control-allow-origin'));
           done();
         });
     });
@@ -237,7 +237,7 @@ describe('cors.test.js', function() {
         .expect({ foo: 'bar' })
         .expect(200, function(err, res) {
           assert(!err);
-          assert(!res.headers['access-control-max-age']);
+          assert(!res.get('access-control-max-age'));
           done();
         });
     });
@@ -344,7 +344,7 @@ describe('cors.test.js', function() {
     it('should skip allowMethods', function(done) {
       const app = new Koa();
       app.use(cors({
-        allowMethods: null,
+        allowMethods: ''
       }));
       app.use(function(ctx) {
         ctx.body = { foo: 'bar' };
@@ -410,7 +410,7 @@ describe('cors.test.js', function() {
           if (err) {
             return done(err);
           }
-          assert(!res.headers['x-example']);
+          assert(!res.get('x-example'));
           done();
         });
     });
@@ -433,8 +433,8 @@ describe('cors.test.js', function() {
           if (err) {
             return done(err);
           }
-          assert(!res.headers['access-control-allow-origin']);
-          assert(!res.headers.vary);
+          assert(!res.get('access-control-allow-origin'));
+          assert(!res.get('vary'));
           done();
         });
     });
@@ -470,6 +470,7 @@ describe('cors.test.js', function() {
       app.use(function(ctx) {
         ctx.body = { foo: 'bar' };
         const error = new Error('Whoops!');
+        //@ts-ignore
         error.headers = { Vary: 'Accept-Encoding' };
         throw error;
       });
@@ -488,6 +489,7 @@ describe('cors.test.js', function() {
       app.use(function(ctx) {
         ctx.body = { foo: 'bar' };
         const error = new Error('Whoops!');
+        //@ts-ignore
         error.headers = { Vary: '*' };
         throw error;
       });
@@ -506,6 +508,7 @@ describe('cors.test.js', function() {
       app.use(function(ctx) {
         ctx.body = { foo: 'bar' };
         const error = new Error('Whoops!');
+        //@ts-ignore
         error.headers = { Vary: 'Origin, Accept-Encoding' };
         throw error;
       });

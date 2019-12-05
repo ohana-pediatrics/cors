@@ -10,6 +10,8 @@ pids
 logs
 results
 
-node_modules
+/node_modules
 npm-debug.log
-coverage/
+/coverage
+/lib
+/.nyc_output

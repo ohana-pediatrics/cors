@@ -1,22 +1,33 @@
-'use strict';
+import { Middleware, ParameterizedContext } from "koa";
 
 const vary = require('vary');
+
+export type CORSOptions = {
+  origin?: string | ((ctx: ParameterizedContext) => string|false|Promise<string|false> )|  Promise<string>
+  allowMethods?: string | string[],
+  exposeHeaders?: string | string[],
+  allowHeaders?: string | string[],
+  maxAge?: string | number,
+  credentials?: boolean,
+  keepHeadersOnError?: boolean
+};
 
 /**
  * CORS middleware
  *
- * @param {Object} [options]
- *  - {String|Function(ctx)} origin `Access-Control-Allow-Origin`, default is request Origin header
- *  - {String|Array} allowMethods `Access-Control-Allow-Methods`, default is 'GET,HEAD,PUT,POST,DELETE,PATCH'
- *  - {String|Array} exposeHeaders `Access-Control-Expose-Headers`
- *  - {String|Array} allowHeaders `Access-Control-Allow-Headers`
- *  - {String|Number} maxAge `Access-Control-Max-Age` in seconds
- *  - {Boolean} credentials `Access-Control-Allow-Credentials`
- *  - {Boolean} keepHeadersOnError Add set headers to `err.header` if an error is thrown
- * @return {Function} cors middleware
+ * @param {CORSOptions} [options]
+ * @param [options.origin] `Access-Control-Allow-Origin`, default is request Origin header
+ * @param [options.allowMethods] `Access-Control-Allow-Methods`, default is 'GET,HEAD,PUT,POST,DELETE,PATCH'
+ * @param [options.exposeHeaders] `Access-Control-Expose-Headers`
+ * @param [options.allowHeaders] `Access-Control-Allow-Headers`
+ * @param [options.maxAge] `Access-Control-Max-Age` in seconds
+ * @param [options.credentials] `Access-Control-Allow-Credentials`
+ * @param [options.keepHeadersOnError] Add set headers to `err.header` if an error is thrown
+ * 
+ * @return {Middleware} Koa middleware
  * @api public
  */
-module.exports = function(options) {
+export const cors = (options:CORSOptions = {}): Middleware => {
   const defaults = {
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
@@ -42,7 +53,7 @@ module.exports = function(options) {
   options.credentials = !!options.credentials;
   options.keepHeadersOnError = options.keepHeadersOnError === undefined || !!options.keepHeadersOnError;
 
-  return async function cors(ctx, next) {
+  return async (ctx, next) => {
     // If the Origin header is not present terminate this set of steps.
     // The request is outside the scope of this specification.
     const requestOrigin = ctx.get('Origin');
@@ -53,18 +64,22 @@ module.exports = function(options) {
 
     if (!requestOrigin) return await next();
 
-    let origin;
-    if (typeof options.origin === 'function') {
-      origin = options.origin(ctx);
-      if (origin instanceof Promise) origin = await origin;
-      if (!origin) return await next();
+    let origin: string;
+    if(options.origin instanceof Promise) {
+      origin = await options.origin;
+    } else if (typeof options.origin === 'function') {
+      const result = await options.origin(ctx);
+      if (!result) { 
+        return await next();
+      }
+      origin = result;
     } else {
-      origin = options.origin || requestOrigin;
+      origin = options.origin ?? requestOrigin;
     }
 
-    const headersSet = {};
+    const headersSet: Record<string, string | string[]> = {};
 
-    function set(key, value) {
+    function set(key: string, value: string | string[]) {
       ctx.set(key, value);
       headersSet[key] = value;
     }
@@ -113,7 +128,7 @@ module.exports = function(options) {
       }
 
       if (options.maxAge) {
-        ctx.set('Access-Control-Max-Age', options.maxAge);
+        ctx.set('Access-Control-Max-Age', `${options.maxAge}`);
       }
 
       if (options.allowMethods) {

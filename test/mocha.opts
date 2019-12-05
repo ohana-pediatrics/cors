@@ -1,0 +1,5 @@
+-r ts-node/register
+--check-leaks 
+-R spec 
+-t 5000 
+test/*.test.ts
