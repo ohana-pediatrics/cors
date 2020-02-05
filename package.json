@@ -1,6 +1,6 @@
 {
   "name": "@ahanapediatrics/cors",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Cross-Origin Resource Sharing(CORS) for koa",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
