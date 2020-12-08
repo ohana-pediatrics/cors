@@ -30,7 +30,7 @@
     "@types/mocha": "^5.2.7",
     "@types/supertest": "^2.0.8",
     "cz-conventional-changelog": "^3.0.2",
-    "git-cz": "^3.3.0",
+    "git-cz": "^4.7.6",
     "istanbul": "*",
     "koa": "^2.11.0",
     "mocha": "^7.0.1",
